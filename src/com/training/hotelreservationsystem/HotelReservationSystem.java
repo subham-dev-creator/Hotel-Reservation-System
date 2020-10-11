@@ -11,11 +11,14 @@ public class HotelReservationSystem {
 
     // ADD NEW HOTEL IN RESERVATION SYSTEM
     public void addHotel(){
-        System.out.println("Enter the Hotel name and rates");
+        System.out.println("Enter the Hotel name ");
         String name =SCANNEROBJ.next();
+        System.out.println("WeekDay Rate :");
+        double weekdayRate = SCANNEROBJ.nextDouble();
+        System.out.println("WeekEnd Rate :");
+        double weekendRate = SCANNEROBJ.nextDouble();
 
-        double rate = SCANNEROBJ.nextDouble();
-        Hotel tempHotel = new Hotel(name,rate);
+        Hotel tempHotel = new Hotel(name,weekdayRate,weekendRate);
         hotelList.add(tempHotel);
     }
 
@@ -33,7 +36,7 @@ public class HotelReservationSystem {
         String cheapestHotel="";
 
         for(Hotel hotel : hotelList) {
-            double rateForHotel=dateDifference*hotel.getRate();
+            double rateForHotel=dateDifference*hotel.getWeekdayRate();
             if(rateForHotel<cheapestRate) {
                 cheapestRate=rateForHotel;
                 cheapestHotel=hotel.getHotelName();
@@ -47,7 +50,7 @@ public class HotelReservationSystem {
     private void displayHotel() {
         int i=0;
         for (Hotel h: hotelList) {
-            System.out.println(++i + ". Hotel " + h.getHotelName() + " Rate: " + h.getRate());
+            System.out.println(++i + ". Hotel " + h.getHotelName() + " WeekDay Rate: " + h.getWeekdayRate() + " WeekEnd Rate : " + h.getWeekendRate());
         }
     }
 

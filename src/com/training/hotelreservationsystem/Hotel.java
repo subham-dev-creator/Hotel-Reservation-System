@@ -1,14 +1,22 @@
 package com.training.hotelreservationsystem;
 
-import java.util.Scanner;
-
 public class Hotel {
     String HotelName;
-    double rate;
+    double weekdayRate;
+    double weekendRate;
 
-    public Hotel(String hotelName, double rate) {
+    public double getWeekendRate() {
+        return weekendRate;
+    }
+
+    public void setWeekendRate(double weekendRate) {
+        this.weekendRate = weekendRate;
+    }
+
+    public Hotel(String hotelName, double weekdayRate, double weekendRate) {
         HotelName = hotelName;
-        this.rate = rate;
+        this.weekdayRate = weekdayRate;
+        this.weekendRate = weekendRate;
     }
 
     public String getHotelName() {
@@ -19,12 +27,12 @@ public class Hotel {
         HotelName = hotelName;
     }
 
-    public double getRate() {
-        return rate;
+    public double getWeekdayRate() {
+        return weekdayRate;
     }
 
-    public void setRate(double rate) {
-        this.rate = rate;
+    public void setWeekdayRate(double weekdayRate) {
+        this.weekdayRate = weekdayRate;
     }
 
 }
