@@ -27,13 +27,4 @@ public class Hotel {
         this.rate = rate;
     }
 
-    public static void main(String[] args) {
-        Scanner SCANNEROBJ = new Scanner(System.in);
-        System.out.println("Enter the Hotel name and rates");
-        String name =SCANNEROBJ.next();
-        double rate = SCANNEROBJ.nextInt();
-
-        Hotel hotel1 = new Hotel(name,rate);
-        System.out.println("Hotel " + hotel1.getHotelName() + " has rate " + hotel1.getRate());
-    }
 }
