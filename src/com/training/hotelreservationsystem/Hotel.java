@@ -4,6 +4,8 @@ public class Hotel {
     String HotelName;
     double weekdayRate;
     double weekendRate;
+    int rating;
+
 
     public double getWeekendRate() {
         return weekendRate;
@@ -13,10 +15,11 @@ public class Hotel {
         this.weekendRate = weekendRate;
     }
 
-    public Hotel(String hotelName, double weekdayRate, double weekendRate) {
-        HotelName = hotelName;
+    public Hotel(String hotelName, double weekdayRate, double weekendRate, int rating) {
+        this.HotelName = hotelName;
         this.weekdayRate = weekdayRate;
         this.weekendRate = weekendRate;
+        this.rating=rating;
     }
 
     public String getHotelName() {
@@ -35,4 +38,11 @@ public class Hotel {
         this.weekdayRate = weekdayRate;
     }
 
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
+    }
 }

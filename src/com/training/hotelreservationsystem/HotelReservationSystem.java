@@ -16,8 +16,10 @@ public class HotelReservationSystem {
         double weekdayRate = SCANNEROBJ.nextDouble();
         System.out.println("WeekEnd Rate :");
         double weekendRate = SCANNEROBJ.nextDouble();
+        System.out.println("Enter the hotel rating from 1-5");
+        int hotelRating = SCANNEROBJ.nextInt();
 
-        Hotel tempHotel = new Hotel(name,weekdayRate,weekendRate);
+        Hotel tempHotel = new Hotel(name,weekdayRate,weekendRate,hotelRating);
         hotelList.add(tempHotel);
     }
 
@@ -57,7 +59,7 @@ public class HotelReservationSystem {
 
         System.out.println("Cheapest Hotels :");
         for(Hotel printCheapestHotel : cheapestHotel) {
-            System.out.println(printCheapestHotel.getHotelName() + " Rate " + startDate + " to " + endDate +" : " + minimumRate);
+            System.out.println(printCheapestHotel.getHotelName() + "\nRating : " + printCheapestHotel.getRating() + "\nRate " + startDate + " to " + endDate +" : " + minimumRate);
         }
     }
 
@@ -65,7 +67,7 @@ public class HotelReservationSystem {
     private void displayHotel() {
         int i=0;
         for (Hotel h: hotelList) {
-            System.out.println(++i + ". Hotel " + h.getHotelName() + " WeekDay Rate: " + h.getWeekdayRate() + " WeekEnd Rate : " + h.getWeekendRate());
+            System.out.println(++i + ". Hotel " + h.getHotelName() + " Rating : " + h.getRating()  + " WeekDay Rate: " + h.getWeekdayRate() + " WeekEnd Rate : " + h.getWeekendRate());
         }
     }
 
