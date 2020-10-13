@@ -31,35 +31,40 @@ public class HotelReservationSystem {
         String date2=SCANNEROBJ.next();
 
         int weekEndDays = 0, weekDays = 0;
-        double minimumRate = Integer.MAX_VALUE;
+        double minimumPrice = Integer.MAX_VALUE;
 
         LocalDate startDate = LocalDate.parse(date1);
         LocalDate endDate = LocalDate.parse(date2);
 
-        for (LocalDate date = startDate; date.isBefore(endDate.plusDays(1)); date = date.plusDays(1)) {
+        for (LocalDate date = startDate; date.isBefore(endDate); date = date.plusDays(1)) {
             int day = date.getDayOfWeek().getValue();
             if (day == 6 || day == 7) {
                 weekEndDays++;
             } else
                 weekDays++;
         }
+        if (endDate.getDayOfWeek().getValue() == 6 || endDate.getDayOfWeek().getValue() == 7)
+            weekEndDays++;
+        else
+            weekDays++;
 
         ArrayList<Hotel> cheapestHotel = new ArrayList<>();
-        for (Hotel hotelList : hotelList) {
-            double temp = (hotelList.getWeekdayRate() * weekDays) + (hotelList.getWeekendRate() * weekEndDays);
-            if (temp < minimumRate) {
-                minimumRate = temp;
+        for (Hotel hotel : hotelList) {
+            double currentHotelPrice = (hotel.getWeekdayRate() * weekDays) + (hotel.getWeekendRate() * weekEndDays);
+            if (currentHotelPrice < minimumPrice) {
+                minimumPrice = currentHotelPrice;
                 cheapestHotel.clear();
-                cheapestHotel.add(hotelList);
-            }
-            else if(temp == minimumRate) {
-                cheapestHotel.add(hotelList);
+                cheapestHotel.add(hotel);
+            } else if (currentHotelPrice == minimumPrice && cheapestHotel.size() > 0 && hotel.getRating() > cheapestHotel.get(0).getRating()) {
+                cheapestHotel.clear();
+                cheapestHotel.add(hotel);
+            } else if(currentHotelPrice == minimumPrice && cheapestHotel.size() > 0 && hotel.getRating() == cheapestHotel.get(0).getRating()){
+                cheapestHotel.add(hotel);
             }
         }
-
         System.out.println("Cheapest Hotels :");
         for(Hotel printCheapestHotel : cheapestHotel) {
-            System.out.println(printCheapestHotel.getHotelName() + "\nRating : " + printCheapestHotel.getRating() + "\nRate " + startDate + " to " + endDate +" : " + minimumRate);
+            System.out.println(printCheapestHotel.getHotelName() + "\nRating : " + printCheapestHotel.getRating() + "\nRate " + startDate + " to " + endDate +" : " );
         }
     }
 
