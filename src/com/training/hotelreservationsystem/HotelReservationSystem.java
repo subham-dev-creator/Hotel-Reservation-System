@@ -1,7 +1,6 @@
 package com.training.hotelreservationsystem;
 
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -24,26 +23,42 @@ public class HotelReservationSystem {
 
     // Check Cheapest Price Between Given Days
     public void checkCheapestPrice(){
-        System.out.println("Enter start date and end date int the format (yyyy-MM-dd),(yyyy-MM-dd)");
-        String line=SCANNEROBJ.next();
-        String[] input=line.split(",");
+        System.out.println("Enter start date in the format (yyyy-MM-dd)");
+        String date1=SCANNEROBJ.next();
+        System.out.println("Enter the end date in the format (yyyy-MM-dd)");
+        String date2=SCANNEROBJ.next();
 
-        LocalDate startDate = LocalDate.parse(input[0]);
-        LocalDate endDate = LocalDate.parse(input[1]);
+        int weekEndDays = 0, weekDays = 0;
+        double minimumRate = Integer.MAX_VALUE;
 
-        int dateDifference=(int) ChronoUnit.DAYS.between(startDate, endDate);
-        double cheapestRate=100000000;
-        String cheapestHotel="";
+        LocalDate startDate = LocalDate.parse(date1);
+        LocalDate endDate = LocalDate.parse(date2);
 
-        for(Hotel hotel : hotelList) {
-            double rateForHotel=dateDifference*hotel.getWeekdayRate();
-            if(rateForHotel<cheapestRate) {
-                cheapestRate=rateForHotel;
-                cheapestHotel=hotel.getHotelName();
+        for (LocalDate date = startDate; date.isBefore(endDate.plusDays(1)); date = date.plusDays(1)) {
+            int day = date.getDayOfWeek().getValue();
+            if (day == 6 || day == 7) {
+                weekEndDays++;
+            } else
+                weekDays++;
+        }
+
+        ArrayList<Hotel> cheapestHotel = new ArrayList<>();
+        for (Hotel hotelList : hotelList) {
+            double temp = (hotelList.getWeekdayRate() * weekDays) + (hotelList.getWeekendRate() * weekEndDays);
+            if (temp < minimumRate) {
+                minimumRate = temp;
+                cheapestHotel.clear();
+                cheapestHotel.add(hotelList);
+            }
+            else if(temp == minimumRate) {
+                cheapestHotel.add(hotelList);
             }
         }
-        if(cheapestRate!=100000000)
-            System.out.println("Cheapest Hotel : \n"+cheapestHotel+", Total Rates: "+cheapestRate);
+
+        System.out.println("Cheapest Hotels :");
+        for(Hotel printCheapestHotel : cheapestHotel) {
+            System.out.println(printCheapestHotel.getHotelName() + " Rate " + startDate + " to " + endDate +" : " + minimumRate);
+        }
     }
 
     // DISPLAY ALL HOTELS WITH PRICES
@@ -77,6 +92,5 @@ public class HotelReservationSystem {
                     break;
             }
         }
-
     }
 }
