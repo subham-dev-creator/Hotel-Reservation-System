@@ -130,8 +130,6 @@ public class HotelReservationSystem {
         System.out.println("Enter the end date in the format (yyyy-MM-dd)");
         String date2=SCANNEROBJ.next();
 
-        double minimumRate = Integer.MAX_VALUE;
-
         LocalDate startDate = LocalDate.parse(date1);
         LocalDate endDate = LocalDate.parse(date2);
 
@@ -169,8 +167,10 @@ public class HotelReservationSystem {
                     break;
                 case 4:
                     hotelSystem.checkBestRated();
+                    break;
                 case 5:
                     hotelSystem.findCheapestHotelForRewardedCustomers();
+                    break;
                 default:
                     System.out.println("Invalid Input Please try again");
                     break;
