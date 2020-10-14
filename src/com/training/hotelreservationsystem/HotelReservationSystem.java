@@ -3,6 +3,7 @@ package com.training.hotelreservationsystem;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class HotelReservationSystem {
     final static Scanner SCANNEROBJ = new Scanner(System.in);
@@ -27,6 +28,24 @@ public class HotelReservationSystem {
         hotelList.add(tempHotel);
     }
 
+    // Function to find the cost of hotel for given range of dates
+    public double totalCost(Hotel h, LocalDate start, LocalDate end,boolean reward) {
+        int weekEndDays = 0, weekDays = 0;
+
+        for (LocalDate date = start; date.isBefore(end.plusDays(1)); date = date.plusDays(1)) {
+            int day = date.getDayOfWeek().getValue();
+            if (day == 6 || day == 7) {
+                weekEndDays++;
+            } else
+                weekDays++;
+        }
+
+        if(reward==true)
+            return (h.getSpecialWeekdayRate() * weekDays) + (h.getSpecialWeekendRate() * weekEndDays);
+        else
+            return (h.getWeekdayRate()* weekDays) + (h.getWeekendRate() * weekEndDays);
+    }
+
     // Check Cheapest Price Between Given Days
     public void checkCheapestPrice(){
         System.out.println("Enter start date in the format (yyyy-MM-dd)");
@@ -40,21 +59,9 @@ public class HotelReservationSystem {
         LocalDate startDate = LocalDate.parse(date1);
         LocalDate endDate = LocalDate.parse(date2);
 
-        for (LocalDate date = startDate; date.isBefore(endDate); date = date.plusDays(1)) {
-            int day = date.getDayOfWeek().getValue();
-            if (day == 6 || day == 7) {
-                weekEndDays++;
-            } else
-                weekDays++;
-        }
-        if (endDate.getDayOfWeek().getValue() == 6 || endDate.getDayOfWeek().getValue() == 7)
-            weekEndDays++;
-        else
-            weekDays++;
-
         ArrayList<Hotel> cheapestHotel = new ArrayList<>();
         for (Hotel hotel : hotelList) {
-            double currentHotelPrice = (hotel.getWeekdayRate() * weekDays) + (hotel.getWeekendRate() * weekEndDays);
+            double currentHotelPrice = totalCost(hotel,startDate,endDate,false);
             if (currentHotelPrice < minimumPrice) {
                 minimumPrice = currentHotelPrice;
                 cheapestHotel.clear();
@@ -80,7 +87,7 @@ public class HotelReservationSystem {
         }
     }
 
-    //
+    // Check for the best rated hotel for the given dates
     public void checkBestRated(){
         System.out.println("Enter start date in the format (yyyy-MM-dd)");
         String date1=SCANNEROBJ.next();
@@ -88,7 +95,6 @@ public class HotelReservationSystem {
         String date2=SCANNEROBJ.next();
 
         int weekEndDays = 0, weekDays = 0;
-        double minimumPrice = Integer.MAX_VALUE;
 
         LocalDate startDate = LocalDate.parse(date1);
         LocalDate endDate = LocalDate.parse(date2);
@@ -117,53 +123,29 @@ public class HotelReservationSystem {
         System.out.println("Total cost : " + cost);
     }
 
+    // Refactored Code (JAVA STREAM) to find cheapest hotel for rewarded Customers
     public void findCheapestHotelForRewardedCustomers() {
         System.out.println("Enter start date in the format (yyyy-MM-dd)");
         String date1=SCANNEROBJ.next();
         System.out.println("Enter the end date in the format (yyyy-MM-dd)");
         String date2=SCANNEROBJ.next();
-        LocalDate entryDate = LocalDate.parse(date1);
-        LocalDate exitDate = LocalDate.parse(date2);
-
-        int weekEndDays = 0, weekDays = 0;
 
         double minimumRate = Integer.MAX_VALUE;
 
-        for (LocalDate date = entryDate; date.isBefore(exitDate); date = date.plusDays(1)) {
-            int day = date.getDayOfWeek().getValue();
-            if (day == 6 || day == 7) {
-                weekEndDays++;
-            } else
-                weekDays++;
-        }
-        if (exitDate.getDayOfWeek().getValue() == 6 || exitDate.getDayOfWeek().getValue() == 7)
-            weekEndDays++;
-        else
-            weekDays++;
+        LocalDate startDate = LocalDate.parse(date1);
+        LocalDate endDate = LocalDate.parse(date2);
 
-        ArrayList<Hotel> cheapestHotel = new ArrayList<>();
-        for (Hotel hotelList : hotelList) {
-            double temp = (hotelList.getSpecialWeekdayRate() * weekDays) + (hotelList.getWeekendRate() * weekEndDays);
-            if (temp < minimumRate) {
-                minimumRate = temp;
-                cheapestHotel.clear();
-                cheapestHotel.add(hotelList);
-            }
-            else if(temp == minimumRate) {
-                cheapestHotel.add(hotelList);
-            }
-        }
-        int maxRating = 0;
-        String hotelName = "";
-        for(Hotel printCheapestHotel : cheapestHotel) {
-            if(printCheapestHotel.getRating()>maxRating) {
-                maxRating = printCheapestHotel.getRating();
-                hotelName = printCheapestHotel.getHotelName();
-            }
-        }
-        System.out.println("Cheapest Best Rated hotel for rewarded customer is \n" + hotelName);
+        Double cost = hotelList.stream().map(h -> totalCost(h, startDate, endDate,true)).min(Double::compare).get();
+        ArrayList<Hotel> tempList = (ArrayList<Hotel>) hotelList.stream()
+                .filter(h -> totalCost(h, startDate, endDate,true) == cost).collect(Collectors.toList());
+
+        Hotel maxRatedHotel = tempList.stream().max((h1,h2) -> h1.getRating() - h2.getRating()).get();
+        String hotelName = maxRatedHotel.getHotelName();
+        int maxRating = maxRatedHotel.getRating();
+        System.out.println("\nThe cheapest best rated hotel for rewarded customer using javaa streams is ");
+        System.out.println("Hotel name" +hotelName);
         System.out.println("Rating : " +maxRating);
-        System.out.println("Total cost : " + minimumRate);
+        System.out.println("Total Cost = " +cost);
 
     }
     public static void main(String[] args) {
