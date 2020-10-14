@@ -18,8 +18,12 @@ public class HotelReservationSystem {
         double weekendRate = SCANNEROBJ.nextDouble();
         System.out.println("Enter the hotel rating from 1-5");
         int hotelRating = SCANNEROBJ.nextInt();
+        System.out.println("Special WeekDay Rate :");
+        double specialWeekdayRate = SCANNEROBJ.nextDouble();
+        System.out.println("Special WeekEnd Rate :");
+        double specialWeekendRate = SCANNEROBJ.nextDouble();
 
-        Hotel tempHotel = new Hotel(name,weekdayRate,weekendRate,hotelRating);
+        Hotel tempHotel = new Hotel(name,weekdayRate,weekendRate,hotelRating,specialWeekdayRate,specialWeekendRate);
         hotelList.add(tempHotel);
     }
 
