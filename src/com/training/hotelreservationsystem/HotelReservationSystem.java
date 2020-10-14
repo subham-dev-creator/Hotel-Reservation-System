@@ -116,13 +116,64 @@ public class HotelReservationSystem {
         System.out.println("Rating : " +tempRating);
         System.out.println("Total cost : " + cost);
     }
+
+    public void findCheapestHotelForRewardedCustomers() {
+        System.out.println("Enter start date in the format (yyyy-MM-dd)");
+        String date1=SCANNEROBJ.next();
+        System.out.println("Enter the end date in the format (yyyy-MM-dd)");
+        String date2=SCANNEROBJ.next();
+        LocalDate entryDate = LocalDate.parse(date1);
+        LocalDate exitDate = LocalDate.parse(date2);
+
+        int weekEndDays = 0, weekDays = 0;
+
+        double minimumRate = Integer.MAX_VALUE;
+
+        for (LocalDate date = entryDate; date.isBefore(exitDate); date = date.plusDays(1)) {
+            int day = date.getDayOfWeek().getValue();
+            if (day == 6 || day == 7) {
+                weekEndDays++;
+            } else
+                weekDays++;
+        }
+        if (exitDate.getDayOfWeek().getValue() == 6 || exitDate.getDayOfWeek().getValue() == 7)
+            weekEndDays++;
+        else
+            weekDays++;
+
+        ArrayList<Hotel> cheapestHotel = new ArrayList<>();
+        for (Hotel hotelList : hotelList) {
+            double temp = (hotelList.getSpecialWeekdayRate() * weekDays) + (hotelList.getWeekendRate() * weekEndDays);
+            if (temp < minimumRate) {
+                minimumRate = temp;
+                cheapestHotel.clear();
+                cheapestHotel.add(hotelList);
+            }
+            else if(temp == minimumRate) {
+                cheapestHotel.add(hotelList);
+            }
+        }
+        int maxRating = 0;
+        String hotelName = "";
+        for(Hotel printCheapestHotel : cheapestHotel) {
+            if(printCheapestHotel.getRating()>maxRating) {
+                maxRating = printCheapestHotel.getRating();
+                hotelName = printCheapestHotel.getHotelName();
+            }
+        }
+        System.out.println("Cheapest Best Rated hotel for rewarded customer is \n" + hotelName);
+        System.out.println("Rating : " +maxRating);
+        System.out.println("Total cost : " + minimumRate);
+
+    }
     public static void main(String[] args) {
         HotelReservationSystem hotelSystem = new HotelReservationSystem();
         System.out.println("Hotel Reservation System");
 
         int choice = 1;
         while (choice != 0) {
-            System.out.println("Enter your choice \n 1.Add New Hotel \n 2.Display Hotel \n 3.Check Cheapest Prices");
+            System.out.println("Enter your choice \n 1.Add New Hotel \n 2.Display Hotel \n 3.Check Cheapest Prices " +
+                    "\n 4.Check Best Rated Hotel \n 5.Check Cheapest Hotel For Rewared Customers");
             choice = SCANNEROBJ.nextInt();
             switch (choice) {
                 case 1:
@@ -134,6 +185,10 @@ public class HotelReservationSystem {
                 case 3:
                     hotelSystem.checkCheapestPrice();
                     break;
+                case 4:
+                    hotelSystem.checkBestRated();
+                case 5:
+                    hotelSystem.findCheapestHotelForRewardedCustomers();
                 default:
                     System.out.println("Invalid Input Please try again");
                     break;

@@ -26,6 +26,22 @@ public class Hotel {
         this.specialWeekendRate = getSpecialWeekendRate;
     }
 
+    public double getSpecialWeekdayRate() {
+        return specialWeekdayRate;
+    }
+
+    public void setSpecialWeekdayRate(double specialWeekdayRate) {
+        this.specialWeekdayRate = specialWeekdayRate;
+    }
+
+    public double getSpecialWeekendRate() {
+        return specialWeekendRate;
+    }
+
+    public void setSpecialWeekendRate(double specialWeekendRate) {
+        this.specialWeekendRate = specialWeekendRate;
+    }
+
     public String getHotelName() {
         return HotelName;
     }
