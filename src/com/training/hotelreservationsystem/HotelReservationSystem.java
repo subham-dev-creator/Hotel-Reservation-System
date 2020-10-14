@@ -76,6 +76,42 @@ public class HotelReservationSystem {
         }
     }
 
+    //
+    public void checkBestRated(){
+        System.out.println("Enter start date in the format (yyyy-MM-dd)");
+        String date1=SCANNEROBJ.next();
+        System.out.println("Enter the end date in the format (yyyy-MM-dd)");
+        String date2=SCANNEROBJ.next();
+
+        int weekEndDays = 0, weekDays = 0;
+        double minimumPrice = Integer.MAX_VALUE;
+
+        LocalDate startDate = LocalDate.parse(date1);
+        LocalDate endDate = LocalDate.parse(date2);
+
+        for (LocalDate date = startDate; date.isBefore(endDate); date = date.plusDays(1)) {
+            int day = date.getDayOfWeek().getValue();
+            if (day == 6 || day == 7) {
+                weekEndDays++;
+            } else
+                weekDays++;
+        }
+
+        String hotelName = "";
+        int tempRating = 0;
+        double cost = 0;
+        for (Hotel hotelList : hotelList) {
+
+            if (hotelList.getRating() > tempRating) {
+                cost = (hotelList.getWeekdayRate() * weekDays) + (hotelList.getWeekendRate() * weekEndDays);
+                hotelName = hotelList.getHotelName();
+                tempRating = hotelList.getRating();
+            }
+        }
+        System.out.println("Best Rated hotel is \n" + hotelName);
+        System.out.println("Rating : " +tempRating);
+        System.out.println("Total cost : " + cost);
+    }
     public static void main(String[] args) {
         HotelReservationSystem hotelSystem = new HotelReservationSystem();
         System.out.println("Hotel Reservation System");
